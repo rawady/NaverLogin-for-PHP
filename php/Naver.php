@@ -172,7 +172,7 @@ class Naver{
 			$NHNreturns = json_decode($retVar);
 
 			if(isset($NHNreturns->access_token)){
-				print_r($NHNreturns);
+
 				$this->access_token			= $NHNreturns->access_token;
 				$this->access_token_type	= $NHNreturns->token_type;
 				$this->refresh_token		= $NHNreturns->refresh_token;
