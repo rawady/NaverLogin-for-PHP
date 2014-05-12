@@ -1,6 +1,6 @@
 <?
 /**
-*	Naver ·Î±×ÀÎ Api Class 0.2
+*	Naver ë¡œê·¸ì¸ Api Class 0.2
 *   class : NaverAPI
 *   Author : Rawady corp. Jung Jintae
 *   date : 2014.5.11 
@@ -11,7 +11,7 @@
 	! required curl enable
 
 *   
-*   º» Å¬·¡½º´Â ³×ÀÌ¹ö °ø½Ä ¶óÀÌºê·¯¸®°¡ ¾Æ´Õ´Ï´Ù. 
+*   ë³¸ í´ë˜ìŠ¤ëŠ” ë„¤ì´ë²„ ê³µì‹ ë¼ì´ë¸ŒëŸ¬ë¦¬ê°€ ì•„ë‹™ë‹ˆë‹¤. 
 *  NHN API Reference : http://developer.naver.com/wiki/pages/NaverLogin_Web
 */
 
@@ -19,12 +19,12 @@
 
 /**
 
- 0.2 Æ÷ÇÔµÊ 
+ 0.2 í¬í•¨ë¨ 
 
-	- ÀÎÁõ ¿äÃ» 
-	- ¿¢¼¼½ºÅäÅ« È¹µæ
-	- »ç¿ëÀÚ Á¤º¸ Ãëµæ
-	- ·Î±×¾Æ¿ô 
+	- ì¸ì¦ ìš”ì²­ 
+	- ì—‘ì„¸ìŠ¤í† í° íšë“
+	- ì‚¬ìš©ì ì •ë³´ ì·¨ë“
+	- ë¡œê·¸ì•„ì›ƒ 
 
 */
 
@@ -38,23 +38,23 @@ class Naver{
 
 	private $tokenDatas	=	array();
 
-	private $access_token			= '';			// oauth ¿¢¼¼½º ÅäÅ«
-	private $reefresh_token			= '';			// oauth °»½Å ÅäÅ«
-	private $access_token_type		= '';			// oauth ÅäÅ« Å¸ÀÔ
-	private $access_token_expire	= '';			// oauth ÅäÅ« ¸¸·á
+	private $access_token			= '';			// oauth ì—‘ì„¸ìŠ¤ í† í°
+	private $reefresh_token			= '';			// oauth ê°±ì‹  í† í°
+	private $access_token_type		= '';			// oauth í† í° íƒ€ì…
+	private $access_token_expire	= '';			// oauth í† í° ë§Œë£Œ
 
 
-	private $client_id		= '';			// ³×ÀÌ¹ö¿¡¼­ ¹ß±Ş¹ŞÀº Å¬¶óÀÌ¾ğÆ® ¾ÆÀÌµğ
-	private $client_secret	= '';			// ³×ÀÌ¹ö¿¡¼­ ¹ß±Ş¹ŞÀº Å¬¶óÀÌ¾ğÆ® ½ÃÅ©¸´Å°
+	private $client_id		= '';			// ë„¤ì´ë²„ì—ì„œ ë°œê¸‰ë°›ì€ í´ë¼ì´ì–¸íŠ¸ ì•„ì´ë””
+	private $client_secret	= '';			// ë„¤ì´ë²„ì—ì„œ ë°œê¸‰ë°›ì€ í´ë¼ì´ì–¸íŠ¸ ì‹œí¬ë¦¿í‚¤
 
-	private $returnURL		= '';			// Äİ¹é ¹ŞÀ» URL ( ³×ÀÌ¹ö¿¡ µî·ÏµÈ Äİ¹é URI°¡ ¿ì¼±µÊ)
-	private $state			= '';			// ³×ÀÌ¹ö ¸í¼¼¿¡ ÇÊ¿äÇÑ °ËÁõ Å° (ÇöÀç ¹öÀü ¶óÀÌºê·¯¸®¿¡¼­ ¹Ì°ËÁõ)
+	private $returnURL		= '';			// ì½œë°± ë°›ì„ URL ( ë„¤ì´ë²„ì— ë“±ë¡ëœ ì½œë°± URIê°€ ìš°ì„ ë¨)
+	private $state			= '';			// ë„¤ì´ë²„ ëª…ì„¸ì— í•„ìš”í•œ ê²€ì¦ í‚¤ (í˜„ì¬ ë²„ì „ ë¼ì´ë¸ŒëŸ¬ë¦¬ì—ì„œ ë¯¸ê²€ì¦)
 
 	
-	private $loginMode		= 'request';	// ¶óÀÌºê·¯¸® ÀÛµ¿ »óÅÂ
+	private $loginMode		= 'request';	// ë¼ì´ë¸ŒëŸ¬ë¦¬ ì‘ë™ ìƒíƒœ
 
-	private $returnCode		= '';			// ³×ÀÌ¹ö¿¡¼­ ¸®ÅÏ ¹ŞÀº ½ÂÀÎ ÄÚµå
-	private $returnState	 = '';			// ³×ÀÌ¹ö¿¡¼­ ¸®ÅÏ ¹ŞÀº °ËÁõ ÄÚµå
+	private $returnCode		= '';			// ë„¤ì´ë²„ì—ì„œ ë¦¬í„´ ë°›ì€ ìŠ¹ì¸ ì½”ë“œ
+	private $returnState	 = '';			// ë„¤ì´ë²„ì—ì„œ ë¦¬í„´ ë°›ì€ ê²€ì¦ ì½”ë“œ
 
 	private $nhnConnectState	= 'empty';
 
@@ -107,11 +107,11 @@ class Naver{
 
 
 		if($this->loginMode == 'request' && ($this->getConnectState() != "connected")){
-			echo '<a href="javascript:loginNaver();"><img src="https://www.rawady.com:5014/open/idn/naver_login.png" alt="³×ÀÌ¹ö ¾ÆÀÌµğ·Î ·Î±×ÀÎ" width="200"></a>';
+			echo '<a href="javascript:loginNaver();"><img src="https://www.rawady.com:5014/open/idn/naver_login.png" alt="ë„¤ì´ë²„ ì•„ì´ë””ë¡œ ë¡œê·¸ì¸" width="200"></a>';
 			echo '
 			<script>
 			function loginNaver(){
-				var win = window.open(\''.NAVER_OAUTH_URL.'authorize?client_id='.$this->client_id.'&response_type=code&redirect_uri=&state='.$this->state.'\', \'³×ÀÌ¹ö ¾ÆÀÌµğ·Î ·Î±×ÀÎ\',\'width=320, height=480, toolbar=no, location=no\');   
+				var win = window.open(\''.NAVER_OAUTH_URL.'authorize?client_id='.$this->client_id.'&response_type=code&redirect_uri=&state='.$this->state.'\', \'ë„¤ì´ë²„ ì•„ì´ë””ë¡œ ë¡œê·¸ì¸\',\'width=320, height=480, toolbar=no, location=no\');   
 				var timer = setInterval(function() {   
 					if(win.closed) {  
 						window.location.reload();
@@ -121,7 +121,7 @@ class Naver{
 			</script>
 			';
 		}else if($this->getConnectState() == "connected"){
-			echo '<a href="https://'.$_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"].'?nhnMode=logout"><img src="https://www.rawady.com:5014/open/idn/naver_logout.png" width="120" alt="³×ÀÌ¹ö ¾ÆÀÌµğ ·Î±×¾Æ¿ô"/></a>';
+			echo '<a href="https://'.$_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"].'?nhnMode=logout"><img src="https://www.rawady.com:5014/open/idn/naver_logout.png" width="120" alt="ë„¤ì´ë²„ ì•„ì´ë”” ë¡œê·¸ì•„ì›ƒ"/></a>';
 		}
 
 		if($this->loginMode == 'request_token'){
@@ -206,7 +206,7 @@ class Naver{
 
 	/**
 	*	Get AccessToken 
-	*	¹ß±ŞµÈ ¿¢¼¼½º ÅäÅ«À» ¹İÈ¯ÇÕ´Ï´Ù. ¿¢¼¼½º ÅäÅ« ¹ß±ŞÀº ·Î±×ÀÎ ÈÄ ÀÚµ¿À¸·Î ÀÌ·ç¾îÁı´Ï´Ù.
+	*	ë°œê¸‰ëœ ì—‘ì„¸ìŠ¤ í† í°ì„ ë°˜í™˜í•©ë‹ˆë‹¤. ì—‘ì„¸ìŠ¤ í† í° ë°œê¸‰ì€ ë¡œê·¸ì¸ í›„ ìë™ìœ¼ë¡œ ì´ë£¨ì–´ì§‘ë‹ˆë‹¤.
 	*/
 	function getAccess_token(){
 		if($this->access_token){
@@ -215,8 +215,8 @@ class Naver{
 	}
 
 	/**
-	*	 ³×ÀÌ¹ö ¿¬°á»óÅÂ¸¦ ¹İÈ¯ÇÕ´Ï´Ù.
-	*    ¿¢¼¼½º ÅäÅ« ¹ß±Ş/ÀúÀåÀÌ ÀÌ·ç¾îÁø ÈÄ connected »óÅÂ°¡ µË´Ï´Ù.
+	*	 ë„¤ì´ë²„ ì—°ê²°ìƒíƒœë¥¼ ë°˜í™˜í•©ë‹ˆë‹¤.
+	*    ì—‘ì„¸ìŠ¤ í† í° ë°œê¸‰/ì €ì¥ì´ ì´ë£¨ì–´ì§„ í›„ connected ìƒíƒœê°€ ë©ë‹ˆë‹¤.
 	*/
 	function getConnectState(){
 		return $this->nhnConnectState;
@@ -230,7 +230,7 @@ class Naver{
 
 
 	/**
-	*	Åä±ÙÀ» ¼¼¼Ç¿¡ ±â·ÏÇÕ´Ï´Ù.
+	*	í† ê·¼ì„ ì„¸ì…˜ì— ê¸°ë¡í•©ë‹ˆë‹¤.
 	*/
 	private function saveSession(){
 		
@@ -267,7 +267,7 @@ class Naver{
 
 
 	/**
-	*	ÀúÀåµÈ ÅäÅ«À» º¹¿øÇÕ´Ï´Ù.
+	*	ì €ì¥ëœ í† í°ì„ ë³µì›í•©ë‹ˆë‹¤.
 	*/
 	private function loadSession(){
 
