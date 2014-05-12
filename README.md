@@ -94,7 +94,7 @@ $naver->login(array(
 네이버에서 제공되는 XML 을  **JSON** 으로 인코딩하여 반환합니다.
 
 ```
-$naver->getUserProfile();
+(string JSON) $naver->getUserProfile();
 ```
 
 
@@ -105,13 +105,26 @@ $naver->getUserProfile();
 현재 사용자의 로그인/인증 상태를 확인 할 수 있습니다.
 
 ```
-$naver->getConnectState();
+(boolean) $naver->getConnectState();
 ```
 
 > **리턴값:**
 > 
 > - <i>(boolean)</i>**true** 로그인 및 인증 완료
 > - <i>(boolean)</i>**false** 연결안됨
+
+
+
+
+### Access Token 확인
+
+현재 사용자에게 발급된 엑세스토큰을 반환합니다.
+
+```
+(string) $naver->getAccess_token();
+```
+
+
 
 
 **곧 업데이트 됩니다...** 
