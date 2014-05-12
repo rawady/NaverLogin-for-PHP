@@ -48,4 +48,54 @@ Documents
 How to use
 ---------------
 
+### Class 초기화
+
+
+```
+$naver = new Naver(array(
+		"CLIENT_ID" => "USER_CLIENT_ID",
+		"CLIENT_SECRET" => "USER_CLIENT_SECRET",
+		"RETURN_URL" => "USER_RETURN_URL")
+	);
+```
+
+
+### 로그인 버튼 생성
+
+로그인 버튼은 네이버 공식 이미지로 저희 서버에서 재전송됩니다. 로그인 상태에서는 로그아웃 버튼이 표시됩니다.
+```
+// $naver->login();
+
+<div class="login_box">
+ <?=$naver->login()?>
+</div>
+```
+
+
+### 사용자 정보 취득
+
+사용자 정보는 로그인 및 인증 완료상태에서만, 작동합니다.
+네이버에서 제공되는 XML 을  **JSON** 으로 인코딩하여 반환합니다.
+
+```
+$naver->getUserProfile();
+```
+
+
+
+
+### 로그인 상태 확인
+
+현재 사용자의 로그인/인증 상태를 확인 할 수 있습니다.
+
+```
+$naver->getConnectState();
+```
+
+> **리턴값:**
+> 
+> - **connected** 로그인 및 인증 완료
+> - **empty** 연결안됨
+
+
 **곧 업데이트 됩니다...** 
