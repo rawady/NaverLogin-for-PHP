@@ -69,6 +69,14 @@ $naver = new Naver(array(
 <div class="login_box">
  <?=$naver->login()?>
 </div>
+
+...
+// 로그인 버튼 크기변경시 
+
+$naver->login(array(
+	"width"=>"200"
+	));
+
 ```
 
 
