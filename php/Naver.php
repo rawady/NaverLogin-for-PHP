@@ -56,7 +56,7 @@ class Naver{
 	private $returnCode		= '';			// 네이버에서 리턴 받은 승인 코드
 	private $returnState	 = '';			// 네이버에서 리턴 받은 검증 코드
 
-	private $nhnConnectState	= 'empty';
+	private $nhnConnectState	= false;
 
 
 	private $curl = NULL; 
@@ -91,7 +91,7 @@ class Naver{
 			$this->logout();
 		}
 
-		if($this->getConnectState() == 'empty'){
+		if($this->getConnectState() == false){
 			$this->generate_state();
 
 			if($_GET['state'] && $_GET['code']){
@@ -117,7 +117,7 @@ class Naver{
 
 		
 		
-		if($this->loginMode == 'request' && ($this->getConnectState() != "connected")){
+		if($this->loginMode == 'request' && (!$this->getConnectState())){
 			echo '<a href="javascript:loginNaver();"><img src="https://www.rawady.com:5014/open/idn/naver_login.png" alt="네이버 아이디로 로그인" width="'.$this->drawOptions['width'].'"></a>';
 			echo '
 			<script>
@@ -131,7 +131,7 @@ class Naver{
 			}
 			</script>
 			';
-		}else if($this->getConnectState() == "connected"){
+		}else if($this->getConnectState()){
 			echo '<a href="https://'.$_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"].'?nhnMode=logout"><img src="https://www.rawady.com:5014/open/idn/naver_logout.png" width="'.$this->drawOptions['width'].'" alt="네이버 아이디 로그아웃"/></a>';
 		}
 
@@ -151,7 +151,7 @@ class Naver{
 				$this->reefresh_token		= $NHNreturns->refresh_token;
 				$this->access_token_expire	= $NHNreturns->expires_in;
 
-				$this->updateConnectState("connected");
+				$this->updateConnectState(true);
 
 				$this->saveSession();
 
@@ -179,7 +179,7 @@ class Naver{
 
 
 	function getUserProfile(){
-		if($this->getConnectState() == "connected"){
+		if($this->getConnectState()){
 			$data = array();
 			$data['Authorization'] = $this->access_token_type.' '.$this->access_token;
 
@@ -272,7 +272,7 @@ class Naver{
 			$this->access_token_type	= '';
 			$this->reefresh_token		= '';
 			$this->access_token_expire	= '';
-			$this->updateConnectState("empty");
+			$this->updateConnectState(false);
 		}
 	}
 
@@ -296,7 +296,7 @@ class Naver{
 			$this->reefresh_token		= $this->tokenDatas['refresh_token'];
 			$this->access_token_expire	= $this->tokenDatas['expires_in'];
 
-			$this->updateConnectState("connected");
+			$this->updateConnectState(true);
 
 			$this->saveSession();
 		}
