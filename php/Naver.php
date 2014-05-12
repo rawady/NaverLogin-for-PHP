@@ -61,9 +61,10 @@ class Naver{
 
 	private $curl = NULL; 
 
-	function __construct($argv = array()) {
 
-		
+	private $drawOptions = array( "type" => "normal", "width" => "200" );
+
+	function __construct($argv = array()) {		
 
 		if  ( ! in_array  ('curl', get_loaded_extensions())) {
 			echo 'curl required';
@@ -103,11 +104,21 @@ class Naver{
 
 
 
-	function login(){
+	function login($options = array()){
 
 
+		if(isset($options['type'])){
+			$this->drawOptions['type'] = $options['type'];
+		}
+		
+		if(isset($options['width'])){
+			$this->drawOptions['width'] = $options['width'];
+		}
+
+		
+		
 		if($this->loginMode == 'request' && ($this->getConnectState() != "connected")){
-			echo '<a href="javascript:loginNaver();"><img src="https://www.rawady.com:5014/open/idn/naver_login.png" alt="네이버 아이디로 로그인" width="200"></a>';
+			echo '<a href="javascript:loginNaver();"><img src="https://www.rawady.com:5014/open/idn/naver_login.png" alt="네이버 아이디로 로그인" width="'.$this->drawOptions['width'].'"></a>';
 			echo '
 			<script>
 			function loginNaver(){
@@ -121,7 +132,7 @@ class Naver{
 			</script>
 			';
 		}else if($this->getConnectState() == "connected"){
-			echo '<a href="https://'.$_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"].'?nhnMode=logout"><img src="https://www.rawady.com:5014/open/idn/naver_logout.png" width="120" alt="네이버 아이디 로그아웃"/></a>';
+			echo '<a href="https://'.$_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"].'?nhnMode=logout"><img src="https://www.rawady.com:5014/open/idn/naver_logout.png" width="'.$this->drawOptions['width'].'" alt="네이버 아이디 로그아웃"/></a>';
 		}
 
 		if($this->loginMode == 'request_token'){
