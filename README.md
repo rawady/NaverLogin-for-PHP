@@ -137,7 +137,3 @@ $naver->login(array(
 (string) $naver->getAccess_token();
 ```
 
-
-
-
-**곧 업데이트 됩니다...** 
