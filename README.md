@@ -1,4 +1,4 @@
-NLPL  - v0.02	{#welcome}
+NLPL  - v0.02
 =====================
 
 
@@ -24,7 +24,6 @@ Documents
 > 
 > - PHP 5 이상의 버전이 필요합니다.
 > - curl 활성화 필요.
-> - <i class="icon-share"></i> http://developer.naver.com/wiki/pages/NaverLogin.
 
 
 > **지원 기능 (0.02 버전):**
