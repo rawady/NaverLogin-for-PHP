@@ -8,13 +8,14 @@ NLPL  - v0.03
 
 Update History
 ---------
-> **0.03 변경사항**
-> 
-> getConnectState() 반환값이 true / false 로 변경됨.
+**0.03 변경사항**
+
+getConnectState() 반환값이 true / false 로 변경됨.
+
 > - (string) connected -> (bool) true
 > - (string) empty -> (bool) false
->
-> getUserProfile() 반환 형식 xml 추가
+
+getUserProfile() 반환 형식 xml 추가
 
 
 Documents
