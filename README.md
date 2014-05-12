@@ -6,6 +6,15 @@ NLPL  - v0.03
 ----------
 
 
+Update History
+---------
+> **0.03 변경사항**
+> 
+> getConnectState() 반환값이 true / false 로 변경됨.
+> - (string) connected -> (bool) true
+> - (string) empty -> (bool) false
+
+
 Documents
 ---------
 
@@ -20,11 +29,7 @@ Documents
 
 
 
-> **0.03 변경사항**
-> 
-> getConnectState() 반환값이 true / false 로 변경됨.
-> - (string) connected -> (bool) true
-> - (string) empty -> (bool) false
+
 
 
 > **Spec (0.03 버전):**
