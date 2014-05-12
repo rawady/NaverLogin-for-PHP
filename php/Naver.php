@@ -1,6 +1,6 @@
 <?
 /**
-*	Naver 로그인 Api Class 0.2
+*	Naver 로그인 Api Class 0.4
 *   class : NaverAPI
 *   Author : Rawady corp. Jung Jintae
 *   date : 2014.5.11 
@@ -45,7 +45,7 @@ SOFTWARE.
 
 /**
 
- 0.2 포함됨 
+ 0.4 포함됨 
 
 	- 인증 요청 
 	- 엑세스토큰 획득
@@ -65,7 +65,7 @@ class Naver{
 	private $tokenDatas	=	array();
 
 	private $access_token			= '';			// oauth 엑세스 토큰
-	private $reefresh_token			= '';			// oauth 갱신 토큰
+	private $refresh_token			= '';			// oauth 갱신 토큰
 	private $access_token_type		= '';			// oauth 토큰 타입
 	private $access_token_expire	= '';			// oauth 토큰 만료
 
@@ -172,9 +172,10 @@ class Naver{
 			$NHNreturns = json_decode($retVar);
 
 			if(isset($NHNreturns->access_token)){
+				print_r($NHNreturns);
 				$this->access_token			= $NHNreturns->access_token;
 				$this->access_token_type	= $NHNreturns->token_type;
-				$this->reefresh_token		= $NHNreturns->refresh_token;
+				$this->refresh_token		= $NHNreturns->refresh_token;
 				$this->access_token_expire	= $NHNreturns->expires_in;
 
 				$this->updateConnectState(true);
@@ -190,7 +191,7 @@ class Naver{
 	function logout(){
 
 		$this->curl = curl_init();
-		curl_setopt($this->curl, CURLOPT_URL, NAVER_OAUTH_URL.'token?client_id='.$this->client_id.'&client_secret='.$this->client_secret.'&grant_type=delete&refresh_token='.$this->reefresh_token.'&sercive_provider=NAVER');
+		curl_setopt($this->curl, CURLOPT_URL, NAVER_OAUTH_URL.'token?client_id='.$this->client_id.'&client_secret='.$this->client_secret.'&grant_type=delete&refresh_token='.$this->refresh_token.'&sercive_provider=NAVER');
 		curl_setopt($this->curl, CURLOPT_POST, 1); 
 		curl_setopt($this->curl, CURLOPT_POSTFIELDS, $data); 
 		curl_setopt($this->curl, CURLOPT_RETURNTRANSFER,true); 
@@ -280,7 +281,7 @@ class Naver{
 			$_saveSession = array();
 			$_saveSession['access_token']		=	$this->access_token;
 			$_saveSession['access_token_type']	=	$this->access_token_type;
-			$_saveSession['reefresh_token']		=	$this->reefresh_token;
+			$_saveSession['refresh_token']		=	$this->refresh_token;
 			$_saveSession['access_token_expire']	=	$this->access_token_expire;
 			
 			$this->tokenDatas = $_saveSession;
@@ -301,7 +302,7 @@ class Naver{
 
 			$this->access_token			= '';
 			$this->access_token_type	= '';
-			$this->reefresh_token		= '';
+			$this->refresh_token		= '';
 			$this->access_token_expire	= '';
 			$this->updateConnectState(false);
 		}
@@ -317,15 +318,15 @@ class Naver{
 			$_loadSession = array();
 			$_loadSession['access_token']		=	$_SESSION[NAVER_SESSION_NAME]['access_token'] ? $_SESSION[NAVER_SESSION_NAME]['access_token'] : '';
 			$_loadSession['access_token_type']	=	$_SESSION[NAVER_SESSION_NAME]['access_token_type'] ? $_SESSION[NAVER_SESSION_NAME]['access_token_type'] : '';
-			$_loadSession['reefresh_token']		=	$_SESSION[NAVER_SESSION_NAME]['reefresh_token'] ? $_SESSION[NAVER_SESSION_NAME]['reefresh_token'] : '';
+			$_loadSession['refresh_token']		=	$_SESSION[NAVER_SESSION_NAME]['refresh_token'] ? $_SESSION[NAVER_SESSION_NAME]['refresh_token'] : '';
 			$_loadSession['access_token_expire']	=	$_SESSION[NAVER_SESSION_NAME]['access_token_expire'] ? $_SESSION[NAVER_SESSION_NAME]['access_token_expire']:'';
 			
 			$this->tokenDatas = $_loadSession;
 
 			$this->access_token			= $this->tokenDatas['access_token'];
 			$this->access_token_type	= $this->tokenDatas['access_token_type'];
-			$this->reefresh_token		= $this->tokenDatas['refresh_token'];
-			$this->access_token_expire	= $this->tokenDatas['expires_in'];
+			$this->refresh_token		= $this->tokenDatas['refresh_token'];
+			$this->access_token_expire	= $this->tokenDatas['access_token_expire'];
 
 			$this->updateConnectState(true);
 

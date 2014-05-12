@@ -1,4 +1,4 @@
-NLPL  - v0.03
+NLPL  - v0.04
 =====================
 
 
@@ -8,6 +8,12 @@ NLPL  - v0.03
 
 Update History
 ---------
+
+**0.04 변경사항**
+refresh_token 세션 복원 오류 수정
+일부 오류 수정
+
+
 **0.03 변경사항**
 
 getConnectState() 반환값이 true / false 로 변경됨.
@@ -35,7 +41,7 @@ Documents
 
 
 
-> **Spec (0.03 버전):**
+> **Spec :**
 > 
 > - PHP 5 이상의 버전이 필요합니다.
 > - curl 활성화 필요.
