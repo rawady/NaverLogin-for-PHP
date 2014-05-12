@@ -13,6 +13,8 @@ Update History
 > getConnectState() 반환값이 true / false 로 변경됨.
 > - (string) connected -> (bool) true
 > - (string) empty -> (bool) false
+>
+> getUserProfile() 반환 형식 xml 추가
 
 
 Documents
@@ -99,7 +101,12 @@ $naver->login(array(
 네이버에서 제공되는 XML 을  **JSON** 으로 인코딩하여 반환합니다.
 
 ```
-(string JSON) $naver->getUserProfile();
+(optional) $naver->getUserProfile((string) return type(JSON, XML));
+
+// Default : json 반환
+// XML 반환시 : $naver->getUserProfile('XML');
+//
+
 ```
 
 

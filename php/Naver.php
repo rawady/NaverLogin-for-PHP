@@ -178,7 +178,7 @@ class Naver{
 	}
 
 
-	function getUserProfile(){
+	function getUserProfile($retType = "JSON"){
 		if($this->getConnectState()){
 			$data = array();
 			$data['Authorization'] = $this->access_token_type.' '.$this->access_token;
@@ -195,21 +195,26 @@ class Naver{
 			$retVar = curl_exec($this->curl); 
 			curl_close($this->curl);
 
-			$xml = new SimpleXMLElement($retVar);
-  
-			$xmlJSON = array();
-			$xmlJSON['result']['resultcode'] = (string) $xml->result[0]->resultcode[0];
-			$xmlJSON['result']['message'] = (string) $xml->result[0]->message[0];
 
-			if($xml->result[0]->resultcode == '00'){
-				foreach($xml->response->children() as $response => $k){
-					$xmlJSON['response'][(string)$response] = (string) $k;
+			if($retType == "JSON"){
+				$xml = new SimpleXMLElement($retVar);
+	  
+				$xmlJSON = array();
+				$xmlJSON['result']['resultcode'] = (string) $xml->result[0]->resultcode[0];
+				$xmlJSON['result']['message'] = (string) $xml->result[0]->message[0];
+
+				if($xml->result[0]->resultcode == '00'){
+					foreach($xml->response->children() as $response => $k){
+						$xmlJSON['response'][(string)$response] = (string) $k;
+					}
 				}
+
+				return json_encode($xmlJSON);
+			}else{
+				return $retVar;
 			}
-
-			return json_encode($xmlJSON);
 		}else{
-
+			return false;
 		}
 	}
 
