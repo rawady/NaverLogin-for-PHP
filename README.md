@@ -110,8 +110,8 @@ $naver->getConnectState();
 
 > **리턴값:**
 > 
-> - **true** 로그인 및 인증 완료
-> - **false** 연결안됨
+> - <i>(boolean)</i>**true** 로그인 및 인증 완료
+> - <i>(boolean)</i>**false** 연결안됨
 
 
 **곧 업데이트 됩니다...** 
