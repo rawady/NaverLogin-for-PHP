@@ -1,6 +1,6 @@
 <?
 /**
-*	Naver 로그인 Api Class 0.4
+*	Naver 로그인 Api Class 0.05
 *   class : NaverAPI
 *   Author : Rawady corp. Jung Jintae
 *   date : 2014.5.11 
@@ -85,6 +85,10 @@ class Naver{
 	private $nhnConnectState	= false;
 
 
+	// action options
+	private $autoClose		= true;
+	private $showLogout		= true;
+
 	private $curl = NULL; 
 
 
@@ -109,6 +113,19 @@ class Naver{
 		if($argv['RETURN_URL']){
 			$this->returnURL = trim(urlencode($argv['RETURN_URL']));
 		}
+		
+		if($argv['AUTO_CLOSE'] == false){
+			$this->autoClose = false;
+		}
+
+		if($argv['SHOW_LOGOUT'] == false){
+			$this->showLogout = false;
+		}
+
+
+		
+
+
 
 		$this->loadSession();
 
@@ -124,6 +141,9 @@ class Naver{
 				$this->loginMode = 'request_token';
 				$this->returnCode = $_GET['code'];
 				$this->returnState = $_GET['state'];
+
+				$this->_getAccessToken();
+				
 			}
 		}
 	}
@@ -143,48 +163,30 @@ class Naver{
 
 		
 		
-		if($this->loginMode == 'request' && (!$this->getConnectState())){
+		if($this->loginMode == 'request' && (!$this->getConnectState()) || !$this->showLogout){
 			echo '<a href="javascript:loginNaver();"><img src="https://www.rawady.com:5014/open/idn/naver_login.png" alt="네이버 아이디로 로그인" width="'.$this->drawOptions['width'].'"></a>';
 			echo '
 			<script>
 			function loginNaver(){
-				var win = window.open(\''.NAVER_OAUTH_URL.'authorize?client_id='.$this->client_id.'&response_type=code&redirect_uri=&state='.$this->state.'\', \'네이버 아이디로 로그인\',\'width=320, height=480, toolbar=no, location=no\');   
+				var win = window.open(\''.NAVER_OAUTH_URL.'authorize?client_id='.$this->client_id.'&response_type=code&redirect_uri=&state='.$this->state.'\', \'네이버 아이디로 로그인\',\'width=320, height=480, toolbar=no, location=no\'); 
+			
 				var timer = setInterval(function() {   
 					if(win.closed) {  
 						window.location.reload();
 					}  
 				}, 500); 
-			}
+			} 
 			</script>
 			';
 		}else if($this->getConnectState()){
-			echo '<a href="https://'.$_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"].'?nhnMode=logout"><img src="https://www.rawady.com:5014/open/idn/naver_logout.png" width="'.$this->drawOptions['width'].'" alt="네이버 아이디 로그아웃"/></a>';
+			if($this->showLogout){
+				echo '<a href="https://'.$_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"].'?nhnMode=logout"><img src="https://www.rawady.com:5014/open/idn/naver_logout.png" width="'.$this->drawOptions['width'].'" alt="네이버 아이디 로그아웃"/></a>';
+			}
 		}
 
+
 		if($this->loginMode == 'request_token'){
-			$this->curl = curl_init();
-			curl_setopt($this->curl, CURLOPT_URL, NAVER_OAUTH_URL.'token?client_id='.$this->client_id.'&client_secret='.$this->client_secret.'&grant_type=authorization_code&code='.$this->returnCode.'&state='.$this->returnState);
-			curl_setopt($this->curl, CURLOPT_POST, 1); 
-			curl_setopt($this->curl, CURLOPT_POSTFIELDS, $data); 
-			curl_setopt($this->curl, CURLOPT_RETURNTRANSFER,true); 
-			$retVar = curl_exec($this->curl); 
-			curl_close($this->curl);
-			$NHNreturns = json_decode($retVar);
-
-			if(isset($NHNreturns->access_token)){
-
-				$this->access_token			= $NHNreturns->access_token;
-				$this->access_token_type	= $NHNreturns->token_type;
-				$this->refresh_token		= $NHNreturns->refresh_token;
-				$this->access_token_expire	= $NHNreturns->expires_in;
-
-				$this->updateConnectState(true);
-
-				$this->saveSession();
-
-				echo "<script>window.close();</script>";
-
-			}
+			$this->_getAccessToken();
 		}
 	}
 
@@ -331,6 +333,36 @@ class Naver{
 			$this->updateConnectState(true);
 
 			$this->saveSession();
+		}
+	}
+
+
+	private function _getAccessToken(){
+		$this->curl = curl_init();
+		curl_setopt($this->curl, CURLOPT_URL, NAVER_OAUTH_URL.'token?client_id='.$this->client_id.'&client_secret='.$this->client_secret.'&grant_type=authorization_code&code='.$this->returnCode.'&state='.$this->returnState);
+		curl_setopt($this->curl, CURLOPT_POST, 1); 
+		curl_setopt($this->curl, CURLOPT_POSTFIELDS, $data); 
+		curl_setopt($this->curl, CURLOPT_RETURNTRANSFER,true); 
+		$retVar = curl_exec($this->curl); 
+		curl_close($this->curl);
+		$NHNreturns = json_decode($retVar);
+
+
+		if(isset($NHNreturns->access_token)){
+
+
+			$this->access_token			= $NHNreturns->access_token;
+			$this->access_token_type	= $NHNreturns->token_type;
+			$this->refresh_token		= $NHNreturns->refresh_token;
+			$this->access_token_expire	= $NHNreturns->expires_in;
+
+			$this->updateConnectState(true);
+
+			$this->saveSession();
+
+			if($this->autoClose){
+				echo "<script>window.close();</script>";
+			}
 		}
 	}
 

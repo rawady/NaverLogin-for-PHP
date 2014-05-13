@@ -1,4 +1,4 @@
-NLPL  - v0.04
+NLPL  - v0.05
 =====================
 
 
@@ -8,6 +8,13 @@ NLPL  - v0.04
 
 Update History
 ---------
+
+**0.05 변경사항**
+- 엑세스 토큰 취득 자동화
+- (private)function _getAccessToken(); 함수추가
+- 로그인 팝업 자동 닫힘 설정 추가
+- 로그아웃 버튼 노출 설정
+
 
 **0.04 변경사항**
 
@@ -75,9 +82,12 @@ How to use
 
 ```
 $naver = new Naver(array(
-		"CLIENT_ID" => "USER_CLIENT_ID",
-		"CLIENT_SECRET" => "USER_CLIENT_SECRET",
-		"RETURN_URL" => "USER_RETURN_URL")
+		"CLIENT_ID" => "USER_CLIENT_ID",		// 클라이언트 ID
+		"CLIENT_SECRET" => "USER_CLIENT_SECRET",	// 클라이언트 시크릿
+		"RETURN_URL" => "USER_RETURN_URL",		// 콜백 URL
+		"AUTO_CLOSE" => false,				// 인증 완료후 팝업 자동으로 닫힘 여부 설정 (추가 정보 기재등 추가행동 필요시 false 설정 후 추가)
+		"SHOW_LOGOUT" => false				// 인증 후에 네이버 로그아웃 버튼 표시/ 또는 표시안함
+		)
 	);
 ```
 
