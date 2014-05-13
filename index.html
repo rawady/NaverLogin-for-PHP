@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="Naverlogin-for-php : [PHP] 네이버 아이디로 로그인-웹 라이브러리" />
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>Naverlogin-for-php</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/rawady/NaverLogin-for-PHP">View on GitHub</a>
+
+          <h1 id="project_title">Naverlogin-for-php</h1>
+          <h2 id="project_tagline">[PHP] 네이버 아이디로 로그인-웹 라이브러리</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/rawady/NaverLogin-for-PHP/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/rawady/NaverLogin-for-PHP/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h1>
+<a name="nlpl----v004" class="anchor" href="#nlpl----v004"><span class="octicon octicon-link"></span></a>NLPL  - v0.04</h1>
+
+<h2>
+<a name="%EB%84%A4%EC%9D%B4%EB%B2%84-%EC%95%84%EC%9D%B4%EB%94%94%EB%A1%9C-%EB%A1%9C%EA%B7%B8%EC%9D%B8-php" class="anchor" href="#%EB%84%A4%EC%9D%B4%EB%B2%84-%EC%95%84%EC%9D%B4%EB%94%94%EB%A1%9C-%EB%A1%9C%EA%B7%B8%EC%9D%B8-php"><span class="octicon octicon-link"></span></a><strong>네이버 아이디로 로그인 PHP</strong>.</h2>
+
+<h2>
+<a name="update-history" class="anchor" href="#update-history"><span class="octicon octicon-link"></span></a>Update History</h2>
+
+<p><strong>0.04 변경사항</strong></p>
+
+<p>refresh_token 세션 복원 오류 수정
+일부 오류 수정</p>
+
+<p><strong>0.03 변경사항</strong></p>
+
+<p>getConnectState() 반환값이 true / false 로 변경됨.</p>
+
+<blockquote>
+<ul>
+<li>(string) connected -&gt; (bool) true</li>
+<li>(string) empty -&gt; (bool) false</li>
+</ul>
+</blockquote>
+
+<p>getUserProfile() 반환 형식 xml 추가</p>
+
+<h2>
+<a name="documents" class="anchor" href="#documents"><span class="octicon octicon-link"></span></a>Documents</h2>
+
+<p><strong>NAVER LOGIN PHP LIBRARY</strong> 는 NAVER 공식 라이브러리가 아닙니다.</p>
+
+<blockquote>
+<p><strong>NOTE:</strong></p>
+
+<ul>
+<li>네이버 공식 라이브러리가 아닙니다.</li>
+<li>PHP로 <strong>네이버 아이디로 로그인</strong> 을 연동하기 쉽도록 제공합니다.</li>
+<li>네이버 공식 API 연동 명세는  <strong>네이버 아이디로 로그인</strong> 을 참고하세요.</li>
+<li>
+<i></i> <a href="http://developer.naver.com/wiki/pages/NaverLogin">http://developer.naver.com/wiki/pages/NaverLogin</a>.</li>
+</ul>
+<p><strong>Spec :</strong></p>
+
+<ul>
+<li>PHP 5 이상의 버전이 필요합니다.</li>
+<li>curl 활성화 필요.</li>
+</ul>
+<p><strong>지원 기능 (0.03 버전):</strong></p>
+
+<ul>
+<li>네이버 인증 요청 및 엑세스 토큰 취득.</li>
+<li>네이버 아이디로 로그인 버튼 생성.</li>
+<li>사용자 프로필 취득 ( JSON ).</li>
+<li>로그아웃</li>
+</ul>
+</blockquote>
+
+<h4>
+<a name="-%EC%8B%9C%EC%9E%91%ED%95%98%EA%B8%B0" class="anchor" href="#-%EC%8B%9C%EC%9E%91%ED%95%98%EA%B8%B0"><span class="octicon octicon-link"></span></a><i></i> 시작하기</h4>
+
+<p>네이버에서 발급된 CLIENT_ID, CLIENT_SECRET 이 필요합니다. <a href="http://developer.naver.com/openapi/register.nhn">http://developer.naver.com/openapi/register.nhn</a> 를 방문하여 키를 발급받고, 등록 과정을 완료한 이후 사용이 가능합니다.</p>
+
+<blockquote>
+<p><strong>주의:</strong> 로그인 사용자 연결 유지를 위해, 세션을 사용합니다. 서버의 세션이 작동 가능하도록 해주세요.</p>
+</blockquote>
+
+<hr><h2>
+<a name="how-to-use" class="anchor" href="#how-to-use"><span class="octicon octicon-link"></span></a>How to use</h2>
+
+<h3>
+<a name="class-%EC%B4%88%EA%B8%B0%ED%99%94" class="anchor" href="#class-%EC%B4%88%EA%B8%B0%ED%99%94"><span class="octicon octicon-link"></span></a>Class 초기화</h3>
+
+<pre><code>$naver = new Naver(array(
+        "CLIENT_ID" =&gt; "USER_CLIENT_ID",
+        "CLIENT_SECRET" =&gt; "USER_CLIENT_SECRET",
+        "RETURN_URL" =&gt; "USER_RETURN_URL")
+    );
+</code></pre>
+
+<h3>
+<a name="%EB%A1%9C%EA%B7%B8%EC%9D%B8-%EB%B2%84%ED%8A%BC-%EC%83%9D%EC%84%B1" class="anchor" href="#%EB%A1%9C%EA%B7%B8%EC%9D%B8-%EB%B2%84%ED%8A%BC-%EC%83%9D%EC%84%B1"><span class="octicon octicon-link"></span></a>로그인 버튼 생성</h3>
+
+<p>로그인 버튼은 네이버 공식 이미지로 저희 서버에서 재전송됩니다. 로그인 상태에서는 로그아웃 버튼이 표시됩니다.</p>
+
+<pre><code>// $naver-&gt;login();
+
+&lt;div class="login_box"&gt;
+ &lt;?=$naver-&gt;login()?&gt;
+&lt;/div&gt;
+</code></pre>
+
+<pre><code>// 로그인 버튼 크기변경시 
+
+$naver-&gt;login(array(
+    "width"=&gt;"200"
+));
+
+</code></pre>
+
+<h3>
+<a name="%EC%82%AC%EC%9A%A9%EC%9E%90-%EC%A0%95%EB%B3%B4-%EC%B7%A8%EB%93%9D" class="anchor" href="#%EC%82%AC%EC%9A%A9%EC%9E%90-%EC%A0%95%EB%B3%B4-%EC%B7%A8%EB%93%9D"><span class="octicon octicon-link"></span></a>사용자 정보 취득</h3>
+
+<p>사용자 정보는 로그인 및 인증 완료상태에서만, 작동합니다.
+네이버에서 제공되는 XML 을  <strong>JSON</strong> 으로 인코딩하여 반환합니다.</p>
+
+<pre><code>(optional) $naver-&gt;getUserProfile((string) return type(JSON, XML));
+
+// Default : json 반환
+// XML 반환시 : $naver-&gt;getUserProfile('XML');
+//
+
+</code></pre>
+
+<h3>
+<a name="%EB%A1%9C%EA%B7%B8%EC%9D%B8-%EC%83%81%ED%83%9C-%ED%99%95%EC%9D%B8" class="anchor" href="#%EB%A1%9C%EA%B7%B8%EC%9D%B8-%EC%83%81%ED%83%9C-%ED%99%95%EC%9D%B8"><span class="octicon octicon-link"></span></a>로그인 상태 확인</h3>
+
+<p>현재 사용자의 로그인/인증 상태를 확인 할 수 있습니다.</p>
+
+<pre><code>(boolean) $naver-&gt;getConnectState();
+</code></pre>
+
+<blockquote>
+<p><strong>리턴값:</strong></p>
+
+<ul>
+<li>
+<i>(boolean)</i><strong>true</strong> 로그인 및 인증 완료</li>
+<li>
+<i>(boolean)</i><strong>false</strong> 연결안됨</li>
+</ul>
+</blockquote>
+
+<h3>
+<a name="access-token-%ED%99%95%EC%9D%B8" class="anchor" href="#access-token-%ED%99%95%EC%9D%B8"><span class="octicon octicon-link"></span></a>Access Token 확인</h3>
+
+<p>현재 사용자에게 발급된 엑세스토큰을 반환합니다.</p>
+
+<pre><code>(string) $naver-&gt;getAccess_token();
+</code></pre>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Naverlogin-for-php maintained by <a href="https://github.com/rawady">rawady</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+
+  </body>
+</html>
