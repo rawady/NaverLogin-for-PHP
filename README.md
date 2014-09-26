@@ -1,4 +1,4 @@
-NLPL  - v0.05
+NLPL  - v0.06
 =====================
 
 
@@ -8,6 +8,10 @@ NLPL  - v0.05
 
 Update History
 ---------
+
+**0.06 변경사항**
+- 오류수정
+- 본 문서의 '시작하기' 중요내용 추가
 
 **0.05 변경사항**
 - 엑세스 토큰 취득 자동화
@@ -67,6 +71,7 @@ Documents
 #### <i class="icon-file"></i> 시작하기
 
 네이버에서 발급된 CLIENT_ID, CLIENT_SECRET 이 필요합니다. http://developer.naver.com/openapi/register.nhn 를 방문하여 키를 발급받고, 등록 과정을 완료한 이후 사용이 가능합니다.
+> API 설정에서 '사이트 URL' 과 'callback URL'로 지정된 위치에서는 반드시 본 클래스가 생성되어 있어야 합니다.
 
 > **주의:** 로그인 사용자 연결 유지를 위해, 세션을 사용합니다. 서버의 세션이 작동 가능하도록 해주세요.
 
@@ -82,9 +87,9 @@ How to use
 
 ```
 $naver = new Naver(array(
-		"CLIENT_ID" => "USER_CLIENT_ID",		// 클라이언트 ID
-		"CLIENT_SECRET" => "USER_CLIENT_SECRET",	// 클라이언트 시크릿
-		"RETURN_URL" => "USER_RETURN_URL",		// 콜백 URL
+		"CLIENT_ID" => "USER_CLIENT_ID",		// (*필수)클라이언트 ID  
+		"CLIENT_SECRET" => "USER_CLIENT_SECRET",	// (*필수)클라이언트 시크릿
+		"RETURN_URL" => "USER_RETURN_URL",		// (*필수)콜백 URL
 		"AUTO_CLOSE" => false,				// 인증 완료후 팝업 자동으로 닫힘 여부 설정 (추가 정보 기재등 추가행동 필요시 false 설정 후 추가)
 		"SHOW_LOGOUT" => false				// 인증 후에 네이버 로그아웃 버튼 표시/ 또는 표시안함
 		)
