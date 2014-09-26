@@ -1,6 +1,6 @@
 <?
 /**
-*	Naver 로그인 Api Class 0.05
+*	Naver 로그인 Api Class 0.06
 *   class : NaverAPI
 *   Author : Rawady corp. Jung Jintae
 *   date : 2014.5.11 
@@ -44,6 +44,13 @@ SOFTWARE.
 
 
 /**
+
+ 0.06 변경
+
+	- ssl 오류 수정
+	- 일부 치명적인 오류 수정
+
+
 
  0.4 포함됨 
 
@@ -168,7 +175,7 @@ class Naver{
 			echo '
 			<script>
 			function loginNaver(){
-				var win = window.open(\''.NAVER_OAUTH_URL.'authorize?client_id='.$this->client_id.'&response_type=code&redirect_uri=&state='.$this->state.'\', \'네이버 아이디로 로그인\',\'width=320, height=480, toolbar=no, location=no\'); 
+				var win = window.open(\''.NAVER_OAUTH_URL.'authorize?client_id='.$this->client_id.'&response_type=code&redirect_uri='.$this->returnURL.'&state='.$this->state.'\', \'네이버 아이디로 로그인\',\'width=320, height=480, toolbar=no, location=no\'); 
 			
 				var timer = setInterval(function() {   
 					if(win.closed) {  
@@ -180,7 +187,7 @@ class Naver{
 			';
 		}else if($this->getConnectState()){
 			if($this->showLogout){
-				echo '<a href="https://'.$_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"].'?nhnMode=logout"><img src="https://www.rawady.com:5014/open/idn/naver_logout.png" width="'.$this->drawOptions['width'].'" alt="네이버 아이디 로그아웃"/></a>';
+				echo '<a href="http://'.$_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"].'?nhnMode=logout"><img src="https://www.rawady.com:5014/open/idn/naver_logout.png" width="'.$this->drawOptions['width'].'" alt="네이버 아이디 로그아웃"/></a>';
 			}
 		}
 
