@@ -1,17 +1,17 @@
 <?
 /**
-*	Naver 로그인 Api Class 0.06
+*	Naver 로그인 Api Class 0.07
 *   class : NaverAPI
 *   Author : Rawady corp. Jung Jintae
-*   date : 2014.5.11 
+*   date : 2015.12.14
 *	https://github.com/rawady/NaverLogin
 
 
 	! required PHP 5.x Higher
 	! required curl enable
 
-*   
-*   본 클래스는 네이버 공식 라이브러리가 아닙니다. 
+*
+*   본 클래스는 네이버 공식 라이브러리가 아닙니다.
 *  NHN API Reference : http://developer.naver.com/wiki/pages/NaverLogin_Web
 
 
@@ -44,6 +44,13 @@ SOFTWARE.
 
 
 /**
+ *
+ 0.07 변경
+
+	- 로그인/로그아웃 버튼 이미지 링크수정
+	- 토큰 자동갱신
+
+
 
  0.06 변경
 
@@ -52,12 +59,12 @@ SOFTWARE.
 
 
 
- 0.4 포함됨 
+ 0.4 포함됨
 
-	- 인증 요청 
+	- 인증 요청
 	- 엑세스토큰 획득
 	- 사용자 정보 취득
-	- 로그아웃 
+	- 로그아웃
 
 */
 
@@ -83,7 +90,7 @@ class Naver{
 	private $returnURL		= '';			// 콜백 받을 URL ( 네이버에 등록된 콜백 URI가 우선됨)
 	private $state			= '';			// 네이버 명세에 필요한 검증 키 (현재 버전 라이브러리에서 미검증)
 
-	
+
 	private $loginMode		= 'request';	// 라이브러리 작동 상태
 
 	private $returnCode		= '';			// 네이버에서 리턴 받은 승인 코드
@@ -96,19 +103,19 @@ class Naver{
 	private $autoClose		= true;
 	private $showLogout		= true;
 
-	private $curl = NULL; 
-
+	private $curl = NULL;
+	private $refreshCount = 1;  // 토큰 만료시 갱신시도 횟수
 
 	private $drawOptions = array( "type" => "normal", "width" => "200" );
 
-	function __construct($argv = array()) {		
+	function __construct($argv = array()) {
 
 		if  ( ! in_array  ('curl', get_loaded_extensions())) {
 			echo 'curl required';
 			return false;
 		}
 
-		
+
 		if($argv['CLIENT_ID']){
 			$this->client_id = trim($argv['CLIENT_ID']);
 		}
@@ -120,7 +127,7 @@ class Naver{
 		if($argv['RETURN_URL']){
 			$this->returnURL = trim(urlencode($argv['RETURN_URL']));
 		}
-		
+
 		if($argv['AUTO_CLOSE'] == false){
 			$this->autoClose = false;
 		}
@@ -130,7 +137,7 @@ class Naver{
 		}
 
 
-		
+
 
 
 
@@ -150,7 +157,7 @@ class Naver{
 				$this->returnState = $_GET['state'];
 
 				$this->_getAccessToken();
-				
+
 			}
 		}
 	}
@@ -163,31 +170,31 @@ class Naver{
 		if(isset($options['type'])){
 			$this->drawOptions['type'] = $options['type'];
 		}
-		
+
 		if(isset($options['width'])){
 			$this->drawOptions['width'] = $options['width'];
 		}
 
-		
-		
+
+
 		if($this->loginMode == 'request' && (!$this->getConnectState()) || !$this->showLogout){
-			echo '<a href="javascript:loginNaver();"><img src="https://www.rawady.com:5014/open/idn/naver_login.png" alt="네이버 아이디로 로그인" width="'.$this->drawOptions['width'].'"></a>';
+			echo '<a href="javascript:loginNaver();"><img src="https://www.eventmaker.kr/open/idn/naver_login.png" alt="네이버 아이디로 로그인" width="'.$this->drawOptions['width'].'"></a>';
 			echo '
 			<script>
 			function loginNaver(){
-				var win = window.open(\''.NAVER_OAUTH_URL.'authorize?client_id='.$this->client_id.'&response_type=code&redirect_uri='.$this->returnURL.'&state='.$this->state.'\', \'네이버 아이디로 로그인\',\'width=320, height=480, toolbar=no, location=no\'); 
-			
-				var timer = setInterval(function() {   
-					if(win.closed) {  
+				var win = window.open(\''.NAVER_OAUTH_URL.'authorize?client_id='.$this->client_id.'&response_type=code&redirect_uri='.$this->returnURL.'&state='.$this->state.'\', \'네이버 아이디로 로그인\',\'width=320, height=480, toolbar=no, location=no\');
+
+				var timer = setInterval(function() {
+					if(win.closed) {
 						window.location.reload();
-					}  
-				}, 500); 
-			} 
+					}
+				}, 500);
+			}
 			</script>
 			';
 		}else if($this->getConnectState()){
 			if($this->showLogout){
-				echo '<a href="http://'.$_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"].'?nhnMode=logout"><img src="https://www.rawady.com:5014/open/idn/naver_logout.png" width="'.$this->drawOptions['width'].'" alt="네이버 아이디 로그아웃"/></a>';
+				echo '<a href="http://'.$_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"].'?nhnMode=logout"><img src="https://www.eventmaker.kr/open/idn/naver_logout.png" width="'.$this->drawOptions['width'].'" alt="네이버 아이디 로그아웃"/></a>';
 			}
 		}
 
@@ -198,17 +205,18 @@ class Naver{
 	}
 
 	function logout(){
+		$this->refreshCount = 1;
 
 		$this->curl = curl_init();
 		curl_setopt($this->curl, CURLOPT_URL, NAVER_OAUTH_URL.'token?client_id='.$this->client_id.'&client_secret='.$this->client_secret.'&grant_type=delete&refresh_token='.$this->refresh_token.'&sercive_provider=NAVER');
-		curl_setopt($this->curl, CURLOPT_POST, 1); 
-		curl_setopt($this->curl, CURLOPT_POSTFIELDS, $data); 
-		curl_setopt($this->curl, CURLOPT_RETURNTRANSFER,true); 
-		$retVar = curl_exec($this->curl); 
+		curl_setopt($this->curl, CURLOPT_POST, 1);
+		curl_setopt($this->curl, CURLOPT_POSTFIELDS, $data);
+		curl_setopt($this->curl, CURLOPT_RETURNTRANSFER,true);
+		$retVar = curl_exec($this->curl);
 		curl_close($this->curl);
-		
+
 		$this->deleteSession();
-		
+
 
 		echo "<script>window.location.href = 'http://".$_SERVER["HTTP_HOST"] . $_SERVER['PHP_SELF']."';</script>";
 	}
@@ -221,20 +229,35 @@ class Naver{
 
 			$this->curl = curl_init();
 			curl_setopt($this->curl, CURLOPT_URL, 'https://apis.naver.com/nidlogin/nid/getUserProfile.xml');
-			curl_setopt($this->curl, CURLOPT_POST, 1); 
-			curl_setopt($this->curl, CURLOPT_POSTFIELDS, $data); 
+			curl_setopt($this->curl, CURLOPT_POST, 1);
+			curl_setopt($this->curl, CURLOPT_POSTFIELDS, $data);
 			curl_setopt($this->curl, CURLOPT_HTTPHEADER, array(
 				'Authorization: '.$data['Authorization']
 			));
 
-			curl_setopt($this->curl, CURLOPT_RETURNTRANSFER,true); 
-			$retVar = curl_exec($this->curl); 
+			curl_setopt($this->curl, CURLOPT_RETURNTRANSFER,true);
+			$retVar = curl_exec($this->curl);
 			curl_close($this->curl);
 
+			$xml = new SimpleXMLElement($retVar);
+
+			$responseState = (string) $xml->result[0]->resultcode[0];
+			if($responseState == "024"){
+
+				if($this->refreshCount > 0){
+					echo "refresh";
+					$this->refreshCount--;
+					$this->_refreshAccessToken();
+					$this->getUserProfile();
+					return;
+				}else{
+					$this->logout();
+					return false;
+				}
+			}
 
 			if($retType == "JSON"){
-				$xml = new SimpleXMLElement($retVar);
-	  
+
 				$xmlJSON = array();
 				$xmlJSON['result']['resultcode'] = (string) $xml->result[0]->resultcode[0];
 				$xmlJSON['result']['message'] = (string) $xml->result[0]->message[0];
@@ -257,7 +280,7 @@ class Naver{
 
 
 	/**
-	*	Get AccessToken 
+	*	Get AccessToken
 	*	발급된 엑세스 토큰을 반환합니다. 엑세스 토큰 발급은 로그인 후 자동으로 이루어집니다.
 	*/
 	function getAccess_token(){
@@ -285,14 +308,14 @@ class Naver{
 	*	토근을 세션에 기록합니다.
 	*/
 	private function saveSession(){
-		
+
 		if(isset($_SESSION) && is_array($_SESSION)){
 			$_saveSession = array();
 			$_saveSession['access_token']		=	$this->access_token;
 			$_saveSession['access_token_type']	=	$this->access_token_type;
 			$_saveSession['refresh_token']		=	$this->refresh_token;
 			$_saveSession['access_token_expire']	=	$this->access_token_expire;
-			
+
 			$this->tokenDatas = $_saveSession;
 
 			foreach($_saveSession as $k=>$v){
@@ -329,7 +352,7 @@ class Naver{
 			$_loadSession['access_token_type']	=	$_SESSION[NAVER_SESSION_NAME]['access_token_type'] ? $_SESSION[NAVER_SESSION_NAME]['access_token_type'] : '';
 			$_loadSession['refresh_token']		=	$_SESSION[NAVER_SESSION_NAME]['refresh_token'] ? $_SESSION[NAVER_SESSION_NAME]['refresh_token'] : '';
 			$_loadSession['access_token_expire']	=	$_SESSION[NAVER_SESSION_NAME]['access_token_expire'] ? $_SESSION[NAVER_SESSION_NAME]['access_token_expire']:'';
-			
+
 			$this->tokenDatas = $_loadSession;
 
 			$this->access_token			= $this->tokenDatas['access_token'];
@@ -347,10 +370,10 @@ class Naver{
 	private function _getAccessToken(){
 		$this->curl = curl_init();
 		curl_setopt($this->curl, CURLOPT_URL, NAVER_OAUTH_URL.'token?client_id='.$this->client_id.'&client_secret='.$this->client_secret.'&grant_type=authorization_code&code='.$this->returnCode.'&state='.$this->returnState);
-		curl_setopt($this->curl, CURLOPT_POST, 1); 
-		curl_setopt($this->curl, CURLOPT_POSTFIELDS, $data); 
-		curl_setopt($this->curl, CURLOPT_RETURNTRANSFER,true); 
-		$retVar = curl_exec($this->curl); 
+		curl_setopt($this->curl, CURLOPT_POST, 1);
+		curl_setopt($this->curl, CURLOPT_POSTFIELDS, $data);
+		curl_setopt($this->curl, CURLOPT_RETURNTRANSFER,true);
+		$retVar = curl_exec($this->curl);
 		curl_close($this->curl);
 		$NHNreturns = json_decode($retVar);
 
@@ -374,10 +397,36 @@ class Naver{
 	}
 
 
+	private function _refreshAccessToken(){
+		$this->curl = curl_init();
+		curl_setopt($this->curl, CURLOPT_URL, NAVER_OAUTH_URL.'token?client_id='.$this->client_id.'&client_secret='.$this->client_secret.'&grant_type=refresh_token&refresh_token='.$this->refresh_token);
+		curl_setopt($this->curl, CURLOPT_POST, 1);
+		curl_setopt($this->curl, CURLOPT_POSTFIELDS, $data);
+		curl_setopt($this->curl, CURLOPT_RETURNTRANSFER,true);
+		$retVar = curl_exec($this->curl);
+		curl_close($this->curl);
+		$NHNreturns = json_decode($retVar);
+
+
+		if(isset($NHNreturns->access_token)){
+
+
+			$this->access_token			= $NHNreturns->access_token;
+			$this->access_token_type	= $NHNreturns->token_type;
+			$this->access_token_expire	= $NHNreturns->expires_in;
+
+			$this->updateConnectState(true);
+
+			$this->saveSession();
+
+		}
+	}
+
+
 
 	private function generate_state() {
-        $mt = microtime();
+    $mt = microtime();
 		$rand = mt_rand();
 		$this->state = md5( $mt . $rand );
-    }
+  }
 }
