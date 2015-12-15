@@ -246,7 +246,6 @@ class Naver{
 			if($responseState == "024"){
 
 				if($this->refreshCount > 0){
-					echo "refresh";
 					$this->refreshCount--;
 					$this->_refreshAccessToken();
 					$this->getUserProfile();
