@@ -187,6 +187,7 @@ class Naver{
 				var timer = setInterval(function() {
 					if(win.closed) {
 						window.location.reload();
+						clearInterval(timer);
 					}
 				}, 500);
 			}
