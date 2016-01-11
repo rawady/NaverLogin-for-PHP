@@ -207,7 +207,7 @@ class Naver{
 
 	function logout(){
 		$this->refreshCount = 1;
-
+		$data = array();
 		$this->curl = curl_init();
 		curl_setopt($this->curl, CURLOPT_URL, NAVER_OAUTH_URL.'token?client_id='.$this->client_id.'&client_secret='.$this->client_secret.'&grant_type=delete&refresh_token='.$this->refresh_token.'&sercive_provider=NAVER');
 		curl_setopt($this->curl, CURLOPT_POST, 1);
@@ -368,6 +368,7 @@ class Naver{
 
 
 	private function _getAccessToken(){
+		$data = array();
 		$this->curl = curl_init();
 		curl_setopt($this->curl, CURLOPT_URL, NAVER_OAUTH_URL.'token?client_id='.$this->client_id.'&client_secret='.$this->client_secret.'&grant_type=authorization_code&code='.$this->returnCode.'&state='.$this->returnState);
 		curl_setopt($this->curl, CURLOPT_POST, 1);
@@ -398,6 +399,7 @@ class Naver{
 
 
 	private function _refreshAccessToken(){
+		$data = array();
 		$this->curl = curl_init();
 		curl_setopt($this->curl, CURLOPT_URL, NAVER_OAUTH_URL.'token?client_id='.$this->client_id.'&client_secret='.$this->client_secret.'&grant_type=refresh_token&refresh_token='.$this->refresh_token);
 		curl_setopt($this->curl, CURLOPT_POST, 1);
