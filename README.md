@@ -50,7 +50,7 @@ Documents
 > - 네이버 공식 라이브러리가 아닙니다.
 > - PHP로 **네이버 아이디로 로그인** 을 연동하기 쉽도록 제공합니다.
 > - 네이버 공식 API 연동 명세는  **네이버 아이디로 로그인** 을 참고하세요.
-> - <i class="icon-share"></i> http://developer.naver.com/wiki/pages/NaverLogin.
+> - <i class="icon-share"></i> https://nid.naver.com/devcenter/main.nhn
 
 
 
