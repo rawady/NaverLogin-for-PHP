@@ -1,9 +1,9 @@
 <?
 /**
-*	Naver 로그인 Api Class 0.07
+*	Naver 로그인 Api Class 0.08
 *   class : NaverAPI
-*   Author : Rawady corp. Jung Jintae
-*   date : 2015.12.14
+*   Author : Rawady corp. Jung jaewoo
+*   date : 2016.09.07
 *	https://github.com/rawady/NaverLogin
 
 
@@ -45,6 +45,12 @@ SOFTWARE.
 
 /**
  *
+0.08 변경
+
+	- 로그인/로그아웃 버튼 이미지 링크변경
+	- 데모 추가
+
+
  0.07 변경
 
 	- 로그인/로그아웃 버튼 이미지 링크수정
@@ -178,7 +184,7 @@ class Naver{
 
 
 		if($this->loginMode == 'request' && (!$this->getConnectState()) || !$this->showLogout){
-			echo '<a href="javascript:loginNaver();"><img src="https://www.eventmaker.kr/open/idn/naver_login.png" alt="네이버 아이디로 로그인" width="'.$this->drawOptions['width'].'"></a>';
+			echo '<a href="javascript:loginNaver();"><img src="http://www.rawady.co.kr/open/idn/naver_login.png" alt="네이버 아이디로 로그인" width="'.$this->drawOptions['width'].'"></a>';
 			echo '
 			<script>
 			function loginNaver(){
@@ -195,7 +201,7 @@ class Naver{
 			';
 		}else if($this->getConnectState()){
 			if($this->showLogout){
-				echo '<a href="http://'.$_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"].'?nhnMode=logout"><img src="https://www.eventmaker.kr/open/idn/naver_logout.png" width="'.$this->drawOptions['width'].'" alt="네이버 아이디 로그아웃"/></a>';
+				echo '<a href="http://'.$_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"].'?nhnMode=logout"><img src="http://www.rawady.co.kr/open/idn/naver_logout.png" width="'.$this->drawOptions['width'].'" alt="네이버 아이디 로그아웃"/></a>';
 			}
 		}
 
@@ -426,7 +432,7 @@ class Naver{
 
 
 
-	private function generate_state() {
+  private function generate_state() {
     $mt = microtime();
 		$rand = mt_rand();
 		$this->state = md5( $mt . $rand );
