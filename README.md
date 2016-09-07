@@ -7,6 +7,10 @@ NLPL  - v0.08 (2016-09-07)
 
 LIVE DEMO : http://www.rawady.co.kr/open/naver/
 
+카카오 아이디로 로그인 : https://github.com/rawady/KakaoLogin-for-PHP
+
+
+
 Update History
 ---------
 **0.08 변경사항**
